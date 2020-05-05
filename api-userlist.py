@@ -10,7 +10,6 @@ from bson.objectid import ObjectId
 from flask_cors import CORS
 
 
-
 class JSONEncoder(json.JSONEncoder):                           
     ''' extend json-encoder class'''    
     def default(self, o):                               
@@ -28,6 +27,7 @@ CORS(app)   # This will enable CORS for all routes
 app.config['MONGO_DBNAME'] = 'userslist' # Name of database on mongo
 app.config["MONGO_URI"] = "mongodb+srv://sysadm:Ff121314@cluster0-gpxwq.mongodb.net/userslist" #URI to Atlas cluster  + Auth Credentials
 
+
 mongo = PyMongo(app)
 app.json_encoder = JSONEncoder # Use the modified encoder class to handle ObjectId & datetime object while jsonifying the response.
 
@@ -36,6 +36,7 @@ app.json_encoder = JSONEncoder # Use the modified encoder class to handle Object
 def index():
     
     return 'Hello! It works!'
+
 
 
 @app.route('/get_data', methods=['GET'])  # Find all data in my collection
@@ -48,6 +49,7 @@ def get_all_data():
         output.append({'login': q['login'], 'password': q['password'], 'firstName': q['firstName'], 'secondName': q['secondName'], 'email': q['email']})
 
     return jsonify({'result': output})
+
 
 
 @app.route('/add_data', methods=['POST']) # Add data in db. Need input JSON-like data.
@@ -67,6 +69,7 @@ def add_data():
     output = {'login': new_user['login'], 'password': new_user['password'], 'firstName': new_user['firstName'], 'secondName': new_user['secondName'], 'email': new_user['email']}
 
     return jsonify({'result': output})
+
 
 
 @app.route('/del_data/<id>', methods=['DELETE'])
@@ -120,7 +123,6 @@ def not_found(error=None):
     resp.status_code = 404
 
     return resp
-
 
 
 
