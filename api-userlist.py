@@ -46,7 +46,7 @@ def get_all_data():
     output = []
 
     for q in user.find():   # q - like query
-        output.append({'login': q['login'], 'password': q['password'], 'firstName': q['firstName'], 'secondName': q['secondName'], 'email': q['email']})
+        output.append({'_id': q['_id'], 'login': q['login'], 'password': q['password'], 'firstName': q['firstName'], 'secondName': q['secondName'], 'email': q['email']})
 
     return jsonify({'result': output})
 
@@ -80,7 +80,6 @@ def del_one_data(id):
     else:
         response = {'message': 'No record found!'}
     return jsonify(response), 200
-
 
 
 #@app.route('/del_data/<id>', methods=['GET'])  # Delete data by user ID
