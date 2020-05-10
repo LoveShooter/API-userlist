@@ -39,21 +39,21 @@ def index():
 
 
 
-@app.route('/get_data', methods=['GET'])  # Find all data in my collection
-def get_all_data():
+@app.route('/get-data', methods=['GET'])  # Find all data in my collection
+def getAllData():
     user = mongo.db.users # Connect to my collection
 
     output = []
 
-    for q in user.find():   # q - like query
-        output.append({'_id': q['_id'], 'login': q['login'], 'password': q['password'], 'firstName': q['firstName'], 'secondName': q['secondName'], 'email': q['email']})
+    for el in user.find():   # el - like query. each element in list
+        output.append({'_id': el['_id'], 'login': el['login'], 'password': el['password'], 'firstName': el['firstName'], 'secondName': el['secondName'], 'email': el['email']})
 
     return jsonify({'result': output})
 
 
 
-@app.route('/add_data', methods=['POST']) # Add data in db. Need input JSON-like data.
-def add_data():
+@app.route('/add-data', methods=['POST']) # Add data in db. Need input JSON-like data.
+def addData():
     user = mongo.db.users
     
     _login = request.json['login']
@@ -63,23 +63,42 @@ def add_data():
     _email = request.json['email']
 
 
-    user_id = user.insert({'login': _login, 'password': _password, 'firstName': _firstName, 'secondName': _secondName, 'email': _email})
-    new_user = user.find_one({'_id': user_id})
+    userId = user.insert({'login': _login, 'password': _password, 'firstName': _firstName, 'secondName': _secondName, 'email': _email})
+    newUser = user.find_one({'_id': userId})
 
-    output = {'login': new_user['login'], 'password': new_user['password'], 'firstName': new_user['firstName'], 'secondName': new_user['secondName'], 'email': new_user['email']}
+    output = {'login': newUser['login'], 'password': newUser['password'], 'firstName': newUser['firstName'], 'secondName': newUser['secondName'], 'email': newUser['email']}
 
     return jsonify({'result': output})
 
 
 
-@app.route('/del_data/<id>', methods=['DELETE'])
-def del_one_data(id):
-    db_response = mongo.db.users.delete_one({'_id': ObjectId(id)})
-    if db_response.deleted_count == 1:
-        response = {'message': 'Record deleted'}
+@app.route('/del-data/<id>', methods=['DELETE'])
+def delData(id):
+    outputId = []
+    for element in mongo.db.users.find():
+        outputId.append(str(element['_id']))
+    
+    if id in outputId:
+        mongo.db.users.delete_one({'_id': ObjectId(id)})
+        response = {"message": "Record deleted"}
     else:
-        response = {'message': 'No record found!'}
+        response = {"message": "Record Not Found!"}
+    
     return jsonify(response), 200
+    
+    
+
+
+
+
+#def del_one_data(id):
+#    db_response = mongo.db.users.delete_one({'_id': ObjectId(id)})
+#    if db_response.deleted_count == 1:
+#        response = {'message': 'Record deleted'}
+#    else:
+#        response = {'message': 'No record found!'}
+#    return jsonify(response), 200
+
 
 
 #@app.route('/del_data/<id>', methods=['GET'])  # Delete data by user ID
