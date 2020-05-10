@@ -72,7 +72,7 @@ def addData():
 
 
 
-@app.route('/del-data/<id>', methods=['DELETE'])
+@app.route('/del-data/<id>', methods=['GET'])
 def delData(id):
     outputId = []
     for element in mongo.db.users.find():
