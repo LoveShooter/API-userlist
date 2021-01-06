@@ -88,7 +88,7 @@ def delData(id):
 
 
 @app.errorhandler(404)
-def not_found(error=None):
+def notFound(error=None):
     message = {
         'status': 404,
         'message': 'Not Found: ' + request.url,
